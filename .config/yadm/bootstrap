@@ -36,6 +36,8 @@ if [ "$system_type" = "Linux" ]; then
 	    sudo apt update
 	    sudo apt install zsh
 	    success "Successfully installed - zsh"
+	    chsh -s $(which zsh)
+	    success "ZSH Set as default shell"
 	fi
     fi
 fi
