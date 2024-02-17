@@ -8,6 +8,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Config Files
+source ~/.config/zsh/aliases.zsh
+
 # Themes
 source ~/.config/zsh/themes/powerlevel10k/powerlevel10k.zsh-theme
 
