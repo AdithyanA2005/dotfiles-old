@@ -27,6 +27,9 @@ if [ "$system_type" = "Linux" ]; then
 fi
 
 # TODO:INSTALL GIT
+# TODO:INSTALL CURL
+# CHECK HOMEBREW FILE
+# CHECK HOME BREW VISE EXTENSTION DOWNLOAD BENIFITS
 
 
 
@@ -58,3 +61,10 @@ if [ ! -d $themes_dir/powerlevel10k ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $themes_dir/powerlevel10k
 fi
 
+
+
+# SETUP NVM 
+if ! command -v nvm &> /dev/null; then
+    echo "\nINSTALLING NODE VERSION MANAGER"
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+fi
