@@ -11,26 +11,37 @@ cd "$HOME"
 echo "Init submodules"
 yadm submodule update --recursive --init
 
-
-# Check if the system type is Darwin (macOS)
-if [ "$system_type" = "Darwin" ]; then
-    # Check if Homebrew is installed
-    if ! command -v brew &> /dev/null; then
-        echo "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
     
-    # Install lolcat package with Homebrew
-    echo "Installing lolcat with Homebrew..."
-    brew install lolcat
-
 # Check if the system type is Linux
-elif [ "$system_type" = "Linux" ]; then
+if [ "$system_type" = "Linux" ]; then
     # Check if it's Ubuntu
     if [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+
         # Install lolcat package with apt
-        echo "Installing lolcat with apt..."
-        sudo apt update
-        sudo apt install lolcat
+	if ! which lolcat >/dev/null 2>&1; then
+	    echo "Installing lolcat with apt..."
+	    sudo apt update
+	    sudo apt install lolcat
+	fi
     fi
+fi
+
+# TODO:INSTALL GIT
+
+
+
+
+# INSTALL ZSH PLUGINS
+plugins_dir=~/.config/zsh/plugins  # Base dir to install zsh plugins
+mkdir -p $plugins_dir # Create plugins_dir if it does not exists
+
+if [ ! -d $plugins_dir/zsh-autosuggestions ]; then
+    echo "\nINSTALLING ZSH AUTOSUGGESTIONS"
+    git clone https://github.com/zsh-users/zsh-autosuggestions $plugins_dir/zsh-autosuggestions
+fi
+
+
+if [ ! -d $plugins_dir/zsh-syntax-highlighting ]; then
+    echo "\nINSTALLING ZSH SYNTAX HIGHLIGHTING"
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting $plugins_dir/zsh-syntax-highlighting
 fi
