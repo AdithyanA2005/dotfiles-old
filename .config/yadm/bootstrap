@@ -1,5 +1,10 @@
 #!/bin/sh
 
+success() {
+  echo "🎉 => $1"
+}
+
+
 # GET THE TYPE OF THE SYSTEM (Darwin, Linux)
 system_type=$(uname -s)
 
@@ -17,11 +22,20 @@ if [ "$system_type" = "Linux" ]; then
     # Check if it's Ubuntu
     if [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
 
-        # Install lolcat package with apt
+        # INSTALL LOLCAT
 	if ! which lolcat >/dev/null 2>&1; then
 	    echo "\nINSTALLING LOLCAT USING APT"
 	    sudo apt update
 	    sudo apt install lolcat
+	    success "Successfully installed - lolcat"
+	fi
+
+	# INSTALL ZSH
+	if ! which zsh >/dev/null 2>&1; then
+	    echo "\nINSTALLING ZSH USING APT"
+	    sudo apt update
+	    sudo apt install zsh
+	    success "Successfully installed - zsh"
 	fi
     fi
 fi
@@ -34,6 +48,9 @@ fi
 
 
 
+
+
+
 # INSTALL ZSH PLUGINS
 plugins_dir=~/.config/zsh/plugins  # Base dir to install zsh plugins
 mkdir -p $plugins_dir # Create plugins_dir if it does not exists
@@ -41,12 +58,14 @@ mkdir -p $plugins_dir # Create plugins_dir if it does not exists
 if [ ! -d $plugins_dir/zsh-autosuggestions ]; then
     echo "\nINSTALLING ZSH AUTOSUGGESTIONS"
     git clone https://github.com/zsh-users/zsh-autosuggestions $plugins_dir/zsh-autosuggestions
+    success "Successfully Installed - zsh autosuggestions plugin"
 fi
 
 
 if [ ! -d $plugins_dir/zsh-syntax-highlighting ]; then
     echo "\nINSTALLING ZSH SYNTAX HIGHLIGHTING"
     git clone https://github.com/zsh-users/zsh-syntax-highlighting $plugins_dir/zsh-syntax-highlighting
+    success "Successfully Installed - zsh syntax highlighting plugin"
 fi
 
 
@@ -59,6 +78,7 @@ mkdir -p $themes_dir # Create themes_dir if it does not exists
 if [ ! -d $themes_dir/powerlevel10k ]; then
     echo "\nINSTALLING POWERLEVEL10K THEME"
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $themes_dir/powerlevel10k
+    success "Successfully Installed - p10k theme"
 fi
 
 
@@ -67,4 +87,8 @@ fi
 if [ ! -d $HOME/.nvm ]; then
     echo "\nINSTALLING NODE VERSION MANAGER"
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    success "Successfully Installed - Node Version Manager"
 fi
+
+
+
