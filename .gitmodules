@@ -1,0 +1,6 @@
+[submodule ".yadm-project"]
+	path = .yadm-project
+	url = https://github.com/TheLocehiliosan/yadm.git
+[submodule ".oh-my-zsh"]
+	path = .oh-my-zsh
+	url = https://github.com/ohmyzsh/ohmyzsh.git
