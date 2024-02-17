@@ -36,6 +36,8 @@ if [ "$system_type" = "Linux" ]; then
 	    sudo apt update
 	    sudo apt install zsh
 	    success "Successfully installed - zsh"
+
+	    echo "\nSETTING ZSH AS DEFAULT SHELL"
 	    chsh -s $(which zsh)
 	    success "ZSH Set as default shell"
 	fi
@@ -93,4 +95,6 @@ if [ ! -d $HOME/.nvm ]; then
 fi
 
 
-
+echo "\n\nNOTE: If you are using wsl consider running:\nyadm config local.os Linux\nyadm alt"
+echo
+success "NOW RESTART THE TERMINAL TO SEE CHANGES"
