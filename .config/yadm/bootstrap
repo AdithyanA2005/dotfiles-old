@@ -7,9 +7,9 @@ system_type=$(uname -s)
 # INIT GIT SUBMODULES
 # Because Git submodule commands cannot operate without a work tree, they must
 # be run from within $HOME (assuming this is the root of your dotfiles)
-cd "$HOME"
-echo "Init submodules"
-yadm submodule update --recursive --init
+# cd "$HOME"
+# echo "\nYADM SUBMODULE INIT"
+# yadm submodule update --recursive --init
 
     
 # Check if the system type is Linux
@@ -19,7 +19,7 @@ if [ "$system_type" = "Linux" ]; then
 
         # Install lolcat package with apt
 	if ! which lolcat >/dev/null 2>&1; then
-	    echo "Installing lolcat with apt..."
+	    echo "\nINSTALLING LOLCAT USING APT"
 	    sudo apt update
 	    sudo apt install lolcat
 	fi
@@ -45,3 +45,16 @@ if [ ! -d $plugins_dir/zsh-syntax-highlighting ]; then
     echo "\nINSTALLING ZSH SYNTAX HIGHLIGHTING"
     git clone https://github.com/zsh-users/zsh-syntax-highlighting $plugins_dir/zsh-syntax-highlighting
 fi
+
+
+
+
+# SETUP P10K THEME
+themes_dir=~/.config/zsh/themes  # Base dir to install zsh themes
+mkdir -p $themes_dir # Create themes_dir if it does not exists
+
+if [ ! -d $themes_dir/powerlevel10k ]; then
+    echo "\nINSTALLING POWERLEVEL10K THEME"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $themes_dir/powerlevel10k
+fi
+
