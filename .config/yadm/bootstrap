@@ -4,6 +4,19 @@ success() {
   echo "🎉 => $1"
 }
 
+install_package() {
+    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+	sudo apt update
+        sudo apt install "$1"
+    elif [ "$system_type" = "Darwin" ]; then
+        brew install "$1"
+    else
+        echo "Unsupported operating system"
+        exit 1
+    fi
+}
+
+
 
 # GET THE TYPE OF THE SYSTEM (Darwin, Linux)
 system_type=$(uname -s)
@@ -16,41 +29,57 @@ system_type=$(uname -s)
 # echo "\nYADM SUBMODULE INIT"
 # yadm submodule update --recursive --init
 
-    
-# Check if the system type is Linux
-if [ "$system_type" = "Linux" ]; then
-    # Check if it's Ubuntu
-    if [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
 
-        # INSTALL LOLCAT
-	if ! which lolcat >/dev/null 2>&1; then
-	    echo "\nINSTALLING LOLCAT USING APT"
-	    sudo apt update
-	    sudo apt install lolcat
-	    success "Successfully installed - lolcat"
-	fi
 
-	# INSTALL ZSH
-	if ! which zsh >/dev/null 2>&1; then
-	    echo "\nINSTALLING ZSH USING APT"
-	    sudo apt update
-	    sudo apt install zsh
-	    success "Successfully installed - zsh"
-
-	    echo "\nSETTING ZSH AS DEFAULT SHELL"
-	    chsh -s $(which zsh)
-	    success "ZSH Set as default shell"
-	fi
+# INSTALL HOMEBREW - FOR MACOS
+if [ "$system_type" = "Darwin" ]; then
+    if ! command -v brew >/dev/null 2>&1; then
+	echo "Installing Homebrew"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+	success "Successfully installed - homebrew"
     fi
 fi
 
-# TODO:INSTALL GIT
-# TODO:INSTALL CURL
-# CHECK HOMEBREW FILE
-# CHECK HOME BREW VISE EXTENSTION DOWNLOAD BENIFITS
 
 
 
+# INSTALL LOLCAT
+if ! command -v lolcat >/dev/null 2>&1; then
+    echo "\nINSTALLING LOLCAT"
+    install_package lolcat
+    success "Successfully installed - lolcat"
+fi
+
+# INSTALL ZSH
+if ! command -v zsh >/dev/null 2>&1; then
+    echo "\nINSTALLING ZSH"
+    install_package zsh
+    success "Successfully installed - zsh"
+fi
+
+# INSTALL GIT
+if ! command -v git >/dev/null 2>&1; then
+    echo "\nINSTALLING GIT"
+    install_package git
+    success "Successfully installed - git"
+fi
+
+# INSTALL CURL
+if ! command -v curl >/dev/null 2>&1; then
+    echo "\nINSTALLING CURL"
+    install_package curl
+    success "Successfully installed - curl"
+fi
+
+
+
+
+# SET ZSH AS DEFAULT SHELL
+if [ "$(basename "$SHELL")" != "zsh" ]; then
+    echo "\nSETTING ZSH AS DEFAULT SHELL"
+    chsh -s $(which zsh)  # Set zsh as the default shell for the current user
+    success "ZSH Set as default shell"
+fi
 
 
 
@@ -87,12 +116,15 @@ fi
 
 
 
-# SETUP NVM 
+
+# INSTALL NVM 
 if [ ! -d $HOME/.nvm ]; then
     echo "\nINSTALLING NODE VERSION MANAGER"
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
     success "Successfully Installed - Node Version Manager"
 fi
+
+
 
 
 echo "\n\nNOTE: If you are using wsl consider running:\nyadm config local.os Linux\nyadm alt"
