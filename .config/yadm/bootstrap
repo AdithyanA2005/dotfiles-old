@@ -4,15 +4,16 @@ success() {
   echo "🎉 => $1"
 }
 
-install_package() {
+ubuntu_install() {
     if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
-	sudo apt update
+        sudo apt update
         sudo apt install "$1"
-    elif [ "$system_type" = "Darwin" ]; then
+    fi
+}
+
+mac_install() {
+    if [ "$system_type" = "Darwin" ]; then
         brew install "$1"
-    else
-        echo "Unsupported operating system"
-        exit 1
     fi
 }
 
@@ -49,37 +50,53 @@ fi
 # INSTALL LOLCAT
 if ! command -v lolcat >/dev/null 2>&1; then
     echo "\nINSTALLING LOLCAT"
-    install_package lolcat
+    ubuntu_install lolcat
+    mac_install lolcat
     success "Successfully installed - lolcat"
 fi
 
 # INSTALL ZSH
 if ! command -v zsh >/dev/null 2>&1; then
     echo "\nINSTALLING ZSH"
-    install_package zsh
+    ubuntu_install zsh
+    mac_install zsh
     success "Successfully installed - zsh"
 fi
 
 # INSTALL GIT
 if ! command -v git >/dev/null 2>&1; then
     echo "\nINSTALLING GIT"
-    install_package git
+    ubuntu_install git
+    mac_install git
     success "Successfully installed - git"
 fi
 
 # INSTALL CURL
 if ! command -v curl >/dev/null 2>&1; then
     echo "\nINSTALLING CURL"
-    install_package curl
+    ubuntu_install curl
+    mac_install curl
     success "Successfully installed - curl"
 fi
 
 # INSTALL PYTHON
 if ! command -v python3 >/dev/null 2>&1; then
     echo "\nINSTALLING PYTHON3"
-    install_package python3
+    ubuntu_install python3
+    mac_install python3
     success "Successfully installed - python3"
 fi
+
+# INSTALL RIPGREP
+if ! command -v ripgrep >/dev/null 2>&1; then
+    echo "\nINSTALLING RIPGREP"
+    ubuntu_install ripgrep
+    mac_install ripgrep
+    success "Successfully installed - ripgrep"
+fi
+
+
+
 
 
 
@@ -88,17 +105,18 @@ fi
 
 
 # INSTALL RUBY
-echo "\nINSTALLING RUBY"
 if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+    echo "\nINSTALLING RUBY"  # To install tools of ruby we need these tools even if ruby is already present
     sudo apt update
     sudo apt install ruby-full build-essential
+    success "Successfully installed - ruby"
 elif [ "$system_type" = "Darwin" ]; then
-    brew install ruby
-else
-    echo "Unsupported operating system"
-    exit 1
+    if ! command -v ruby >/dev/null 2>&1; then
+        echo "\nINSTALLING RUBY"
+        brew install ruby
+        success "Successfully installed - ruby"
+    fi
 fi
-success "Successfully installed - ruby"
 
 # INSTALL COLORLS
 if ! command -v colorls >/dev/null 2>&1; then
@@ -167,6 +185,7 @@ if [ ! -d $HOME/.nvm ]; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
     success "Successfully Installed - Node Version Manager"
 fi
+
 
 
 
