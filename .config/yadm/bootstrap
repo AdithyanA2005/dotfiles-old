@@ -75,7 +75,7 @@ fi
 echo "\nINSTALLING RUBY"
 if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
     sudo apt update
-    sudo apt install ruby-full
+    sudo apt install ruby-full build-essential
 elif [ "$system_type" = "Darwin" ]; then
     brew install ruby
 else
