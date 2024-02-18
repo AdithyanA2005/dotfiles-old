@@ -74,6 +74,19 @@ if ! command -v curl >/dev/null 2>&1; then
     success "Successfully installed - curl"
 fi
 
+# INSTALL PYTHON
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "\nINSTALLING PYTHON3"
+    install_package python3
+    success "Successfully installed - python3"
+fi
+
+
+
+
+
+
+
 # INSTALL RUBY
 echo "\nINSTALLING RUBY"
 if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
