@@ -145,6 +145,7 @@ fi
 if ! command -v cargo >/dev/null 2>&1; then
     echo "\nINSTALLING CARGO"
     curl https://sh.rustup.rs -sSf | sh
+    export PATH="$HOME/.cargo/bin:$PATH"
     success "Successfully installed - cargo"
 fi
 
