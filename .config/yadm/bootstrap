@@ -17,6 +17,9 @@ install_package() {
 }
 
 
+# Updating the yadm repo origin URL for using ssh
+yadm remote set-url origin "git@github.com:AdithyanA2005/dotfiles.git"
+
 
 # GET THE TYPE OF THE SYSTEM (Darwin, Linux)
 system_type=$(uname -s)
