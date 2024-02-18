@@ -71,6 +71,27 @@ if ! command -v curl >/dev/null 2>&1; then
     success "Successfully installed - curl"
 fi
 
+# INSTALL RUBY
+echo "\nINSTALLING RUBY"
+if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+    sudo apt update
+    sudo apt install ruby-full
+elif [ "$system_type" = "Darwin" ]; then
+    brew install ruby
+else
+    echo "Unsupported operating system"
+    exit 1
+fi
+success "Successfully installed - ruby"
+
+# INSTALL COLORLS
+if ! command -v colorls >/dev/null 2>&1; then
+    echo "\nINSTALLING COLORLS"
+    sudo gem install colorls
+    success "Successfully installed - colorls"
+fi
+
+
 
 
 
