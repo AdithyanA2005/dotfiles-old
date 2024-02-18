@@ -141,6 +141,22 @@ if ! command -v colorls >/dev/null 2>&1; then
     success "Successfully installed - colorls"
 fi
 
+# INSTALL CARGO
+if ! command -v cargo >/dev/null 2>&1; then
+    echo "\nINSTALLING CARGO"
+    curl https://sh.rustup.rs -sSf | sh
+    success "Successfully installed - cargo"
+fi
+
+# INSTALL LUNARVIM
+if ! command -v lvim >/dev/null 2>&1; then
+    echo "\nINSTALLING LUNARVIM"
+    curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh -o install.sh
+    chmod +x install.sh
+    LV_BRANCH='release-1.3/neovim-0.9' bash ./install.sh -y
+    rm install.sh
+    success "Successfully installed - lunarvim"
+fi
 
 
 
@@ -181,7 +197,6 @@ fi
 
 
 
-
 # SETUP P10K THEME
 themes_dir=~/.config/zsh/themes  # Base dir to install zsh themes
 mkdir -p $themes_dir # Create themes_dir if it does not exists
@@ -191,7 +206,6 @@ if [ ! -d $themes_dir/powerlevel10k ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $themes_dir/powerlevel10k
     success "Successfully Installed - p10k theme"
 fi
-
 
 
 
