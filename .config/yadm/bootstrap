@@ -125,6 +125,13 @@ if [ ! -d $plugins_dir/zsh-syntax-highlighting ]; then
     success "Successfully Installed - zsh syntax highlighting plugin"
 fi
 
+if [ ! -d $plugins_dir/zsh-completions ]; then
+    echo "\nINSTALLING ZSH COMPLETIONS"
+    git clone https://github.com/zsh-users/zsh-completions $plugins_dir/zsh-completions
+    success "Successfully Installed - zsh completions plugin"
+fi
+
+
 
 
 

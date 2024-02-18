@@ -17,6 +17,7 @@ source ~/.config/zsh/themes/powerlevel10k/powerlevel10k.zsh-theme
 # Plugins
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fpath=(~/.config/zsh/plugins/zsh-completions/src $fpath)
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
