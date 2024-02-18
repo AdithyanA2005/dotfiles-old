@@ -44,9 +44,6 @@ if [ "$system_type" = "Darwin" ]; then
     fi
 fi
 
-
-
-
 # INSTALL LOLCAT
 if ! command -v lolcat >/dev/null 2>&1; then
     echo "\nINSTALLING LOLCAT"
@@ -88,21 +85,40 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 # INSTALL RIPGREP
-if ! command -v ripgrep >/dev/null 2>&1; then
+if ! command -v rg >/dev/null 2>&1; then
     echo "\nINSTALLING RIPGREP"
     ubuntu_install ripgrep
     mac_install ripgrep
     success "Successfully installed - ripgrep"
 fi
 
+# INSTALL NVM 
+if [ ! -d $HOME/.nvm ]; then
+    echo "\nINSTALLING NODE VERSION MANAGER"
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    success "Successfully Installed - Node Version Manager"
+    
+    # After installing nvm use the node lts version
+    if ! command -v node >/dev/null 2>&1; then
+        nvm install --lts
+        nvm use --lts
+    fi
+fi
 
-
-
-
-
-
-
-
+# INSTALL LAZYGIT
+if ! command -v lazygit >/dev/null 2>&1; then
+    echo "\nINSTALLING LAZYGIT"
+    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+        tar xf lazygit.tar.gz lazygit
+        sudo install lazygit /usr/local/bin
+    elif [ "$system_type" = "Darwin" ]; then
+        brew install jesseduffield/lazygit/lazygit
+        brew install lazygit
+    fi
+    success "Successfully installed - lazygit"
+fi
 
 # INSTALL RUBY
 if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
@@ -174,16 +190,6 @@ if [ ! -d $themes_dir/powerlevel10k ]; then
     echo "\nINSTALLING POWERLEVEL10K THEME"
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $themes_dir/powerlevel10k
     success "Successfully Installed - p10k theme"
-fi
-
-
-
-
-# INSTALL NVM 
-if [ ! -d $HOME/.nvm ]; then
-    echo "\nINSTALLING NODE VERSION MANAGER"
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-    success "Successfully Installed - Node Version Manager"
 fi
 
 
