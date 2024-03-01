@@ -54,3 +54,5 @@ alias vi='vim'
 alias now='date +"%T"'
 alias today='date +"%A, %B %-d, %Y"'
 
+# Short Hands
+alias py='python3'
