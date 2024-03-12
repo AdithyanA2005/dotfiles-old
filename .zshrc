@@ -10,6 +10,7 @@ fi
 
 # Config Files
 source ~/.config/zsh/aliases.zsh
+source ~/.config/zsh/functions.zsh
 
 # Themes
 source ~/.config/zsh/themes/powerlevel10k/powerlevel10k.zsh-theme
