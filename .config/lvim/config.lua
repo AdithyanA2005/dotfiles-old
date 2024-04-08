@@ -3,6 +3,14 @@
 -- Forum: https://www.reddit.com/r/lunarvim/
 -- Discord: https://discord.com/invite/Xb9B4Ny
 lvim.transparent_window = true
+vim.opt.relativenumber = true
+
+lvim.builtin.which_key.mappings["t"] = {
+  name = "Terminal",
+  f = { "<cmd>ToggleTerm direction=float<cr>", "Float" },
+  v = { "<cmd>ToggleTerm direction=vertical<cr>", "Vertical" },
+  h = { "<cmd>ToggleTerm direction=horizontal<cr>", "Horizontal" },
+}
 
 lvim.plugins = {
   {
