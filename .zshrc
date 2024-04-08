@@ -12,6 +12,9 @@ fi
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/functions.zsh
 
+# Custom Script aliases
+source ~/.custom_scripts/.zsh_aliases
+
 # Themes
 source ~/.config/zsh/themes/powerlevel10k/powerlevel10k.zsh-theme
 
@@ -27,3 +30,4 @@ fpath=(~/.config/zsh/plugins/zsh-completions/src $fpath)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+

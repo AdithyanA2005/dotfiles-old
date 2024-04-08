@@ -55,4 +55,4 @@ alias now='date +"%T"'
 alias today='date +"%A, %B %-d, %Y"'
 
 # Short Hands
-alias py='python3'
+alias py='python3' #Necessary for custom scripts used! Dont delete it
