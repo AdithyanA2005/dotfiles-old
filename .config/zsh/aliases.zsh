@@ -17,8 +17,8 @@ alias gc='git commit'
 alias gco='git checkout'
 alias gd='git diff'
 alias gs='git status'
-alias gpl='git pull'
-alias gpu='git push'
+alias gp='git push '
+alias gpom='git push origin main'
 alias gcl='git clone'
 
 # File operations
@@ -56,3 +56,4 @@ alias today='date +"%A, %B %-d, %Y"'
 
 # Short Hands
 alias py='python3' #Necessary for custom scripts used! Dont delete it
+alias lg='lazygit'
