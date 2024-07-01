@@ -3,6 +3,7 @@
 -- Forum: https://www.reddit.com/r/lunarvim/
 -- Discord: https://discord.com/invite/Xb9B4Ny
 lvim.transparent_window = true
+lvim.builtin.treesitter.autotag.enable = true
 vim.opt.relativenumber = true
 
 lvim.builtin.which_key.mappings["t"] = {
