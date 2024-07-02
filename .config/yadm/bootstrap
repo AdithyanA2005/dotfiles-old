@@ -201,14 +201,14 @@ fi
 
 
 # SETUP P10K THEME
-themes_dir=~/.config/zsh/themes  # Base dir to install zsh themes
-mkdir -p $themes_dir # Create themes_dir if it does not exists
+# themes_dir=~/.config/zsh/themes  # Base dir to install zsh themes
+# mkdir -p $themes_dir # Create themes_dir if it does not exists
 
-if [ ! -d $themes_dir/powerlevel10k ]; then
-    echo "\nINSTALLING POWERLEVEL10K THEME"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $themes_dir/powerlevel10k
-    success "Successfully Installed - p10k theme"
-fi
+# if [ ! -d $themes_dir/powerlevel10k ]; then
+#     echo "\nINSTALLING POWERLEVEL10K THEME"
+#     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $themes_dir/powerlevel10k
+#     success "Successfully Installed - p10k theme"
+# fi
 
 
 
