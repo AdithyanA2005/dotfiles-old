@@ -84,6 +84,14 @@ if ! command -v python3 >/dev/null 2>&1; then
     success "Successfully installed - python3"
 fi
 
+# INSTALL FZF
+if ! command -v fzf >/dev/null 2>&1; then
+    echo "\nINSTALLING FZF"
+    ubuntu_install fzf
+    mac_install fzf
+    success "Successfully installed - FZF"
+fi
+
 # INSTALL RIPGREP
 if ! command -v rg >/dev/null 2>&1; then
     echo "\nINSTALLING RIPGREP"
@@ -163,14 +171,23 @@ fi
 
 # INSTALL STARSHIP
 if ! command -v starship >/dev/null 2>&1; then
-  if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+  if [ "$system_type" = "Linux" ]; then
     curl -sS https://starship.rs/install.sh | sh
   elif [ "$system_type" = "Darwin" ]; then
     brew install starship
   fi
-  success "Successfully installed - lunarvim"
+  success "Successfully installed - Starship"
 fi
 
+# INSTALL ZOXIDE
+if ! command -v zoxide >/dev/null 2>&1; then
+  if [ "$system_type" = "Linux" ]; then
+    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+  elif [ "$system_type" = "Darwin" ]; then
+    brew install zoxide
+  fi
+  success "Successfully installed - Zoxide"
+fi
 
 
 

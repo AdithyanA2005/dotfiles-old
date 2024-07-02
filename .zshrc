@@ -20,3 +20,9 @@ export NVM_DIR="$HOME/.nvm"
 
 # Initialize starship for zsh
 eval "$(starship init zsh)"
+
+# Initialize Zoxide
+# --cmd cd - this will ensure that when we call cd zoxide is called
+# so now we can use both cd as normaly and z in "cd" itself with no confusions
+eval "$(zoxide init --cmd cd zsh)" 
+
