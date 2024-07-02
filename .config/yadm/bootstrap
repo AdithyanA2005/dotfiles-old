@@ -123,17 +123,17 @@ if ! command -v lazygit >/dev/null 2>&1; then
 fi
 
 # INSTALL RUBY
-if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+if ! command -v ruby >/dev/null 2>&1; then
+  if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
     echo "\nINSTALLING RUBY"  # To install tools of ruby we need these tools even if ruby is already present
     sudo apt update
     sudo apt install ruby-full build-essential
     success "Successfully installed - ruby"
-elif [ "$system_type" = "Darwin" ]; then
-    if ! command -v ruby >/dev/null 2>&1; then
-        echo "\nINSTALLING RUBY"
-        brew install ruby
-        success "Successfully installed - ruby"
-    fi
+  elif [ "$system_type" = "Darwin" ]; then
+    echo "\nINSTALLING RUBY"
+    brew install ruby
+    success "Successfully installed - ruby"
+  fi
 fi
 
 # INSTALL COLORLS
