@@ -144,11 +144,22 @@ if ! command -v ruby >/dev/null 2>&1; then
   fi
 fi
 
-# INSTALL COLORLS
-if ! command -v colorls >/dev/null 2>&1; then
-    echo "\nINSTALLING COLORLS"
-    sudo gem install colorls
-    success "Successfully installed - colorls"
+# INSTALL EZA
+if ! command -v eza >/dev/null 2>&1; then
+    echo "\nINSTALLING EZA"
+    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+	sudo apt update
+	sudo apt install -y gpg
+	sudo mkdir -p /etc/apt/keyrings
+	wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+	echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+	sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+	sudo apt update
+	sudo apt install -y eza
+    elif [ "$system_type" = "Darwin" ]; then
+	brew install eza
+    fi
+    success "Successfully installed - eza"
 fi
 
 # INSTALL CARGO
@@ -157,6 +168,20 @@ if ! command -v cargo >/dev/null 2>&1; then
     curl https://sh.rustup.rs -sSf | sh
     export PATH="$HOME/.cargo/bin:$PATH"
     success "Successfully installed - cargo"
+fi
+
+
+# INSTALL NEOVIM
+if ! command -v nvim >/dev/null 2>&1; then
+    echo "\nINSTALLING NEOVIM"
+    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
+	sudo add-apt-repository ppa:neovim-ppa/stable 
+	sudo apt-get update  
+	sudo apt-get install neovim
+    elif [ "$system_type" = "Darwin" ]; then
+        brew install neovim
+    fi
+    success "Successfully installed - neovim"
 fi
 
 # INSTALL LUNARVIM
