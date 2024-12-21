@@ -1,20 +1,15 @@
 #!/bin/sh
 
-success() {
+success() { 
   echo "🎉 => $1"
 }
 
-ubuntu_install() {
-    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
-        sudo apt update
-        sudo apt install "$1"
-    fi
+is_ubuntu() {
+  [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release
 }
 
-mac_install() {
-    if [ "$system_type" = "Darwin" ]; then
-        brew install "$1"
-    fi
+is_mac() {
+  [ "$system_type" = "Darwin" ]
 }
 
 
@@ -34,222 +29,284 @@ system_type=$(uname -s)
 # yadm submodule update --recursive --init
 
 
-
-# INSTALL HOMEBREW - FOR MACOS
-if [ "$system_type" = "Darwin" ]; then
+install_homebrew_for_mac() {
+  if is_mac; then
     if ! command -v brew >/dev/null 2>&1; then
-	echo "Installing Homebrew"
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-	success "Successfully installed - homebrew"
+      echo "\nINSTALLING HOMEBREW"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+      success "SUCCESSFULLY INSTALLED - HOMEBREW"
     fi
-fi
-
-# INSTALL LOLCAT
-if ! command -v lolcat >/dev/null 2>&1; then
-    echo "\nINSTALLING LOLCAT"
-    ubuntu_install lolcat
-    mac_install lolcat
-    success "Successfully installed - lolcat"
-fi
-
-# INSTALL ZSH
-if ! command -v zsh >/dev/null 2>&1; then
-    echo "\nINSTALLING ZSH"
-    ubuntu_install zsh
-    mac_install zsh
-    success "Successfully installed - zsh"
-fi
-
-# INSTALL GIT
-if ! command -v git >/dev/null 2>&1; then
-    echo "\nINSTALLING GIT"
-    ubuntu_install git
-    mac_install git
-    success "Successfully installed - git"
-fi
-
-# INSTALL CURL
-if ! command -v curl >/dev/null 2>&1; then
-    echo "\nINSTALLING CURL"
-    ubuntu_install curl
-    mac_install curl
-    success "Successfully installed - curl"
-fi
-
-# INSTALL PYTHON
-if ! command -v python3 >/dev/null 2>&1; then
-    echo "\nINSTALLING PYTHON3"
-    ubuntu_install python3
-    mac_install python3
-    success "Successfully installed - python3"
-fi
-
-# INSTALL FZF
-if ! command -v fzf >/dev/null 2>&1; then
-    echo "\nINSTALLING FZF"
-    ubuntu_install fzf
-    mac_install fzf
-    success "Successfully installed - FZF"
-fi
-
-# INSTALL RIPGREP
-if ! command -v rg >/dev/null 2>&1; then
-    echo "\nINSTALLING RIPGREP"
-    ubuntu_install ripgrep
-    mac_install ripgrep
-    success "Successfully installed - ripgrep"
-fi
-
-# INSTALL NVM 
-if [ ! -d $HOME/.nvm ]; then
-    echo "\nINSTALLING NODE VERSION MANAGER"
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-    success "Successfully Installed - Node Version Manager"
-    
-    # After installing nvm use the node lts version
-    if ! command -v node >/dev/null 2>&1; then
-        nvm install --lts
-        nvm use --lts
-    fi
-fi
-
-# INSTALL LAZYGIT
-if ! command -v lazygit >/dev/null 2>&1; then
-    echo "\nINSTALLING LAZYGIT"
-    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-        tar xf lazygit.tar.gz lazygit
-        sudo install lazygit /usr/local/bin
-        rm -rf lazygit
-        rm -f lazygit.tar.gz
-    elif [ "$system_type" = "Darwin" ]; then
-        brew install jesseduffield/lazygit/lazygit
-        brew install lazygit
-    fi
-    success "Successfully installed - lazygit"
-fi
-
-# INSTALL RUBY
-if ! command -v ruby >/dev/null 2>&1; then
-  if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
-    echo "\nINSTALLING RUBY"  # To install tools of ruby we need these tools even if ruby is already present
-    sudo apt update
-    sudo apt install ruby-full build-essential
-    success "Successfully installed - ruby"
-  elif [ "$system_type" = "Darwin" ]; then
-    echo "\nINSTALLING RUBY"
-    brew install ruby
-    success "Successfully installed - ruby"
   fi
-fi
+}
 
-# INSTALL EZA
-if ! command -v eza >/dev/null 2>&1; then
-    echo "\nINSTALLING EZA"
-    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
-	sudo apt update
-	sudo apt install -y gpg
-	sudo mkdir -p /etc/apt/keyrings
-	wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
-	echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
-	sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-	sudo apt update
-	sudo apt install -y eza
-    elif [ "$system_type" = "Darwin" ]; then
-	brew install eza
+install_lolcat() {
+  if ! command -v lolcat >/dev/null 2>&1; then
+    echo "\nINSTALLING LOLCAT"
+    if is_mac; then 
+      brew install lolcat
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install lolcat
+    fi    
+    success "SUCCESSFULLY INSTALLED - LOLCAT"
+  fi
+}
+
+install_git() {
+  if ! command -v git >/dev/null 2>&1; then
+    echo "\nINSTALLING GIT"
+    if is_mac; then
+      brew install git
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install git
     fi
-    success "Successfully installed - eza"
-fi
+    success "SUCCESSFULLY INSTALLED - GIT"
+  fi
+}
 
-# INSTALL CARGO
-if ! command -v cargo >/dev/null 2>&1; then
+install_curl() {
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "\nINSTALLING CURL"
+    if is_mac; then
+      brew install curl
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install curl
+    fi
+    success "SUCCESSFULLY INSTALLED - CURL"
+  fi
+}
+
+install_cargo() {
+  if ! command -v cargo >/dev/null 2>&1; then
     echo "\nINSTALLING CARGO"
     curl https://sh.rustup.rs -sSf | sh
     export PATH="$HOME/.cargo/bin:$PATH"
-    success "Successfully installed - cargo"
-fi
+    success "SUCCESSFULLY INSTALLED - CARGO"
+  fi
+}
 
+install_nvm() {
+  if [ ! -d $HOME/.nvm ]; then
+    echo "\nINSTALLING NODE VERSION MANAGER"
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    success "SUCCESSFULLY INSTALLED - NVM"
+  fi
+}
 
-# INSTALL NEOVIM
-if ! command -v nvim >/dev/null 2>&1; then
-    echo "\nINSTALLING NEOVIM"
-    if [ "$system_type" = "Linux" ] && [ -f /etc/os-release ] && grep -q "^ID=ubuntu" /etc/os-release; then
-	sudo add-apt-repository ppa:neovim-ppa/stable 
-	sudo apt-get update  
-	sudo apt-get install neovim
-    elif [ "$system_type" = "Darwin" ]; then
-        brew install neovim
+install_node_lts() {
+  if ! command -v node >/dev/null 2>&1; then
+    echo "\nSETUP LTS VERSION OF NODE"
+    nvm install --lts
+    nvm use --lts
+    success "SUCCESSFULLY INSTALLED - NVM"
+  fi
+}
+
+install_fzf() {
+  if ! command -v fzf >/dev/null 2>&1; then
+    echo "\nINSTALLING FZF"
+    if is_mac; then
+      brew install fzf
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install fzf
     fi
-    success "Successfully installed - neovim"
-fi
+    success "SUCCESSFULLY INSTALLED - FZF"
+  fi
+}
 
-# INSTALL LUNARVIM
-if ! command -v lvim >/dev/null 2>&1; then
+install_ripgrep() {
+  if ! command -v rg >/dev/null 2>&1; then
+    echo "\nINSTALLING RIPGREP"
+    if is_mac; then
+      brew install ripgrep
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install ripgrep
+    fi
+    success "SUCCESSFULLY INSTALLED - RIPGREP"
+  fi
+}
+
+install_ruby() {
+  if ! command -v ruby >/dev/null 2>&1; then
+    echo "\nINSTALLING RUBY"
+    if is_mac; then
+      brew install ruby
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install ruby-full build-essential
+    fi
+    success "SUCCESSFULLY INSTALLED - RUBY"
+  fi
+}
+
+install_zsh() {
+  if ! command -v zsh >/dev/null 2>&1; then
+    echo "\nINSTALLING ZSH"
+    if is_mac; then
+      brew install zsh
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install zsh
+    fi
+    success "SUCCESSFULLY INSTALLED - ZSH"
+  fi
+}
+
+set_zsh_as_default_shell() {
+  if [ "$(basename "$SHELL")" != "zsh" ]; then
+    echo "\nSETTING ZSH AS DEFAULT SHELL"
+    chsh -s $(which zsh)  # Set zsh as the default shell for the current user
+    success "ZSH SET AS DEFAULT SHELL"
+  fi
+}
+
+install_zsh_plugins() {
+  # INSTALL ZSH PLUGINS
+  plugins_dir=~/.config/zsh/plugins  # Base dir to install zsh plugins
+  mkdir -p $plugins_dir # Create plugins_dir if it does not exists
+
+  # Install autosuggestion plugin
+  if [ ! -d $plugins_dir/zsh-autosuggestions ]; then
+    echo "\nINSTALLING ZSH AUTOSUGGESTIONS"
+    git clone https://github.com/zsh-users/zsh-autosuggestions $plugins_dir/zsh-autosuggestions
+    success "Successfully Installed - zsh autosuggestions plugin"
+  fi
+
+  # Install syntax highlighting plugin
+  if [ ! -d $plugins_dir/zsh-syntax-highlighting ]; then
+    echo "\nINSTALLING ZSH SYNTAX HIGHLIGHTING"
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting $plugins_dir/zsh-syntax-highlighting
+    success "Successfully Installed - zsh syntax highlighting plugin"
+  fi
+
+  # Install zsh completions plugin
+  if [ ! -d $plugins_dir/zsh-completions ]; then
+    echo "\nINSTALLING ZSH COMPLETIONS"
+    git clone https://github.com/zsh-users/zsh-completions $plugins_dir/zsh-completions
+    success "Successfully Installed - zsh completions plugin"
+  fi
+}
+
+install_eza() {
+  if ! command -v eza >/dev/null 2>&1; then
+    echo "\nINSTALLING EZA"
+    if is_mac; then
+  	  brew install eza
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install -y gpg
+      sudo mkdir -p /etc/apt/keyrings
+      wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+      echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+      sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+      sudo apt update
+      sudo apt install -y eza
+    fi
+    success "SUCCESSFULLY INSTALLED - EZA"
+  fi
+}
+
+install_zoxide() {
+  if ! command -v zoxide >/dev/null 2>&1; then
+    if is_mac; then
+      brew install zoxide
+    elif is_ubuntu; then
+      curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+    fi
+    success "SUCCESSFULLY INSTALLED - ZOXIDE"
+  fi
+}
+
+install_starship() {
+  if ! command -v starship >/dev/null 2>&1; then
+    if is_mac; then
+      brew install starship
+    elif is_ubuntu; then
+      curl -sS https://starship.rs/install.sh | sh
+    fi
+    success "SUCCESSFULLY INSTALLED - STARSHIP"
+  fi
+}
+
+install_python() {
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "\nINSTALLING PYTHON3"
+    if is_mac; then
+      brew install python3
+    elif is_ubuntu; then
+      sudo apt update
+      sudo apt install python3
+    fi
+    success "SUCCESSFULLY INSTALLED - PYTHON3"
+  fi
+}
+
+install_lazygit() {
+  if ! command -v lazygit >/dev/null 2>&1; then
+    echo "\nINSTALLING LAZYGIT"
+    if is_mac; then
+      brew install jesseduffield/lazygit/lazygit
+      brew install lazygit
+    elif is_ubuntu; then
+      LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+      curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+      tar xf lazygit.tar.gz lazygit
+      sudo install lazygit /usr/local/bin
+      rm -rf lazygit
+      rm -f lazygit.tar.gz
+    fi
+    success "SUCCESSFULLY INSTALLED - LAZYGIT"
+  fi
+}
+
+install_neovim() {
+  if ! command -v nvim >/dev/null 2>&1; then
+    echo "\nINSTALLING NEOVIM"
+    if is_mac; then
+      brew install neovim
+    elif is_ubuntu; then
+      sudo add-apt-repository ppa:neovim-ppa/stable 
+	    sudo apt-get update  
+	    sudo apt-get install neovim
+    fi
+    success "SUCCESSFULLY INSTALLED - NEOVIM"
+  fi
+}
+
+install_lunarvim() {
+  if ! command -v lvim >/dev/null 2>&1; then
     echo "\nINSTALLING LUNARVIM"
     curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh -o install.sh
     chmod +x install.sh
     LV_BRANCH='release-1.3/neovim-0.9' bash ./install.sh -y
     rm install.sh
     success "Successfully installed - lunarvim"
-fi
-
-# INSTALL STARSHIP
-if ! command -v starship >/dev/null 2>&1; then
-  if [ "$system_type" = "Linux" ]; then
-    curl -sS https://starship.rs/install.sh | sh
-  elif [ "$system_type" = "Darwin" ]; then
-    brew install starship
   fi
-  success "Successfully installed - Starship"
-fi
-
-# INSTALL ZOXIDE
-if ! command -v zoxide >/dev/null 2>&1; then
-  if [ "$system_type" = "Linux" ]; then
-    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-  elif [ "$system_type" = "Darwin" ]; then
-    brew install zoxide
-  fi
-  success "Successfully installed - Zoxide"
-fi
+}
 
 
+install_homebrew_for_mac
+install_lolcat
+install_git
+install_curl
+install_cargo
+install_nvm
+install_node_lts
+install_fzf
+install_ripgrep
+install_ruby
+install_zsh
+set_zsh_as_default_shell
+install_zsh_plugins
+install_eza
+install_zoxide
+install_starship
+install_python
+install_lazygit
 
-# SET ZSH AS DEFAULT SHELL
-if [ "$(basename "$SHELL")" != "zsh" ]; then
-    echo "\nSETTING ZSH AS DEFAULT SHELL"
-    chsh -s $(which zsh)  # Set zsh as the default shell for the current user
-    success "ZSH Set as default shell"
-fi
-
-
-
-
-# INSTALL ZSH PLUGINS
-plugins_dir=~/.config/zsh/plugins  # Base dir to install zsh plugins
-mkdir -p $plugins_dir # Create plugins_dir if it does not exists
-
-if [ ! -d $plugins_dir/zsh-autosuggestions ]; then
-    echo "\nINSTALLING ZSH AUTOSUGGESTIONS"
-    git clone https://github.com/zsh-users/zsh-autosuggestions $plugins_dir/zsh-autosuggestions
-    success "Successfully Installed - zsh autosuggestions plugin"
-fi
-
-
-if [ ! -d $plugins_dir/zsh-syntax-highlighting ]; then
-    echo "\nINSTALLING ZSH SYNTAX HIGHLIGHTING"
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting $plugins_dir/zsh-syntax-highlighting
-    success "Successfully Installed - zsh syntax highlighting plugin"
-fi
-
-if [ ! -d $plugins_dir/zsh-completions ]; then
-    echo "\nINSTALLING ZSH COMPLETIONS"
-    git clone https://github.com/zsh-users/zsh-completions $plugins_dir/zsh-completions
-    success "Successfully Installed - zsh completions plugin"
-fi
-
-
-echo "\n\nNOTE: If you are using wsl consider running:\nyadm config local.os Linux\nyadm alt"
-echo
+echo "\n\nNOTE: If you are using wsl consider running:\nyadm config local.os Linux\nyadm alt\n"
 success "NOW RESTART THE TERMINAL TO SEE CHANGES"
