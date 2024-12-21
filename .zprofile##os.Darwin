@@ -1,2 +1,5 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH=~/.local/bin:$PATH
+
+# Added by `rbenv init` on Wed Sep 18 00:19:39 IST 2024
+eval "$(rbenv init - --no-rehash zsh)"
