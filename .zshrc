@@ -26,3 +26,5 @@ eval "$(starship init zsh)"
 # so now we can use both cd as normaly and z in "cd" itself with no confusions
 eval "$(zoxide init --cmd cd zsh)" 
 
+
+export EZA_CONFIG_DIR="$HOME/.config/eza"
