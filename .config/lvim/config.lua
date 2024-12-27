@@ -6,6 +6,14 @@
 lvim.colorscheme = "dracula"
 lvim.transparent_window = true
 lvim.builtin.treesitter.rainbow.enable = true
+lvim.builtin.alpha.dashboard.section.header.val = {
+  "██╗     ██╗   ██╗███╗   ██╗ █████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
+  "██║     ██║   ██║████╗  ██║██╔══██╗██╔══██╗██║   ██║██║████╗ ████║",
+  "██║     ██║   ██║██╔██╗ ██║███████║██████╔╝██║   ██║██║██╔████╔██║",
+  "██║     ██║   ██║██║╚██╗██║██╔══██║██╔══██╗╚██╗ ██╔╝██║██║╚██╔╝██║",
+  "███████╗╚██████╔╝██║ ╚████║██║  ██║██║  ██║ ╚████╔╝ ██║██║ ╚═╝ ██║",
+  "╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝",
+}
 
 vim.opt.relativenumber = true
 vim.opt.foldmethod = "expr"
