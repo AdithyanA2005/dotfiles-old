@@ -1,6 +1,6 @@
 #!/bin/sh
 
-success() { 
+success() {
   echo "🎉 => $1"
 }
 
@@ -12,14 +12,11 @@ is_mac() {
   [ "$system_type" = "Darwin" ]
 }
 
-
 # Updating the yadm repo origin URL for using ssh
 yadm remote set-url origin "git@github.com:AdithyanA2005/dotfiles.git"
 
-
 # GET THE TYPE OF THE SYSTEM (Darwin, Linux)
 system_type=$(uname -s)
-
 
 # INIT GIT SUBMODULES
 # Because Git submodule commands cannot operate without a work tree, they must
@@ -28,6 +25,16 @@ system_type=$(uname -s)
 # echo "\nYADM SUBMODULE INIT"
 # yadm submodule update --recursive --init
 
+install_lunarvim() {
+  if ! command -v lvim >/dev/null 2>&1; then
+    echo "\nINSTALLING LUNARVIM"
+    curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh -o install.sh
+    chmod +x install.sh
+    LV_BRANCH='release-1.3/neovim-0.9' bash ./install.sh -y
+    rm install.sh
+    success "Successfully installed - lunarvim"
+  fi
+}
 
 install_homebrew_for_mac() {
   if is_mac; then
@@ -42,12 +49,12 @@ install_homebrew_for_mac() {
 install_lolcat() {
   if ! command -v lolcat >/dev/null 2>&1; then
     echo "\nINSTALLING LOLCAT"
-    if is_mac; then 
+    if is_mac; then
       brew install lolcat
     elif is_ubuntu; then
       sudo apt update
       sudo apt install lolcat
-    fi    
+    fi
     success "SUCCESSFULLY INSTALLED - LOLCAT"
   fi
 }
@@ -159,15 +166,15 @@ install_zsh() {
 set_zsh_as_default_shell() {
   if [ "$(basename "$SHELL")" != "zsh" ]; then
     echo "\nSETTING ZSH AS DEFAULT SHELL"
-    chsh -s $(which zsh)  # Set zsh as the default shell for the current user
+    chsh -s $(which zsh) # Set zsh as the default shell for the current user
     success "ZSH SET AS DEFAULT SHELL"
   fi
 }
 
 install_zsh_plugins() {
   # INSTALL ZSH PLUGINS
-  plugins_dir=~/.config/zsh/plugins  # Base dir to install zsh plugins
-  mkdir -p $plugins_dir # Create plugins_dir if it does not exists
+  plugins_dir=~/.config/zsh/plugins # Base dir to install zsh plugins
+  mkdir -p $plugins_dir             # Create plugins_dir if it does not exists
 
   # Install autosuggestion plugin
   if [ ! -d $plugins_dir/zsh-autosuggestions ]; then
@@ -195,7 +202,7 @@ install_eza() {
   if ! command -v eza >/dev/null 2>&1; then
     echo "\nINSTALLING EZA"
     if is_mac; then
-  	  brew install eza
+      brew install eza
     elif is_ubuntu; then
       sudo apt update
       sudo apt install -y gpg
@@ -265,29 +272,24 @@ install_lazygit() {
 
 install_neovim() {
   if ! command -v nvim >/dev/null 2>&1; then
+    # INSTALL NEOVIM
     echo "\nINSTALLING NEOVIM"
     if is_mac; then
       brew install neovim
     elif is_ubuntu; then
-      sudo add-apt-repository ppa:neovim-ppa/stable 
-	    sudo apt-get update  
-	    sudo apt-get install neovim
+      sudo add-apt-repository ppa:neovim-ppa/stable
+      sudo apt-get update
+      sudo apt-get install neovim
     fi
     success "SUCCESSFULLY INSTALLED - NEOVIM"
+
+    # SETUP LAZYVIM
+    echo "\nSETUP LAZYVIM"
+    [ -d "~/.config/nvim" ] && mv "~/.config/nvim" "~/.config/nvim.bak" # Backup any existing nvim folder
+    git clone git@github.com:AdithyanA2005/Neovim_Config.git ~/.config/nvim
+    success "SETUP SUCCESS - LAZYVIM"
   fi
 }
-
-install_lunarvim() {
-  if ! command -v lvim >/dev/null 2>&1; then
-    echo "\nINSTALLING LUNARVIM"
-    curl -s https://raw.githubusercontent.com/LunarVim/LunarVim/release-1.3/neovim-0.9/utils/installer/install.sh -o install.sh
-    chmod +x install.sh
-    LV_BRANCH='release-1.3/neovim-0.9' bash ./install.sh -y
-    rm install.sh
-    success "Successfully installed - lunarvim"
-  fi
-}
-
 
 install_homebrew_for_mac
 install_lolcat
@@ -307,6 +309,7 @@ install_zoxide
 install_starship
 install_python
 install_lazygit
+install_neovim
 
 echo "\n\nNOTE: If you are using wsl consider running:\nyadm config local.os Linux\nyadm alt\n"
 success "NOW RESTART THE TERMINAL TO SEE CHANGES"
